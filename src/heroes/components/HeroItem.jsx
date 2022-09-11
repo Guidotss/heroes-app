@@ -6,7 +6,7 @@ export const HeroItem = ({ hero }) => {
     const CharacterByHero =  (<p className="card-text">{hero.characters}</p>);
 
   return(
-    <div className="col">
+    <div className="col animate__animated animate__fadeIn">
         <div className="card">
             <div className="row no-gutter">
                 <div className="col-4">
