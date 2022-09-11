@@ -1,7 +1,8 @@
 import { useNavigate,useLocation } from "react-router-dom"
 import queryString from "query-string"
 import { useForm } from "../../hook/useForm"
-import { HeroItem } from "../barrelFile"
+import { HeroItem, getHeroByName } from "../barrelFile"
+
 
 
 export const SearchPage = () => {
@@ -13,15 +14,20 @@ export const SearchPage = () => {
   
 
   const { searchText,onInputChange } = useForm({
-    searchText:''
+    searchText:q
   })
 
+  const heroesFiltered = getHeroByName(q);
+
+  const showSearch = (q.length === 0);
+  const showError = (q.length > 0 && heroesFiltered.length === 0);
+
   const onSearchSubmit = (e) => {
-    e.preventDefault(); 
-    if(searchText.trim().length <= 1) return;
-    
+    e.preventDefault();
     navigate(`/search?q=${searchText}`)
   }
+
+
 
   return (
     <>
@@ -48,13 +54,21 @@ export const SearchPage = () => {
           <div className="col-7">
             <h4>Results</h4>
             <hr />
-            <div className="alert alert-primary">
-              Search a hero
-            </div>
-            <div className="alert alert-danger">
-              There is no a hero with <b>{ q }</b>
-            </div>
-            {/* <HeroItem/> */}
+        {/*     {
+              (q === '') && <div className="alert alert-info">Search a hero</div>
+            }
+            {
+              (q !== '' && heroesFiltered.length === 0) && <div className="alert alert-danger">There is no a hero with { q }</div>
+            } */}
+
+            <div className="alert alert-info" style={{ display: showSearch ? '' : 'none' }}>Search a hero</div>
+            <div className="alert alert-danger" style={{ display: showError ? '' : 'none' }} >There is no a hero with { q }</div>
+            {
+              heroesFiltered.map(hero => (
+                <HeroItem key={hero.id} hero={hero}/>
+              ))
+            }
+            
           </div>
       </div>
     </>
